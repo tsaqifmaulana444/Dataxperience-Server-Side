@@ -3,16 +3,31 @@ package main
 import (
 	"dataxperience-server-side/controllers"
 	"dataxperience-server-side/models"
+	"net/http"
 	"time"
 
 	"github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/cors"
 	"gorm.io/gorm"
 )
 
 func main() {
 	r := gin.Default()
 	models.ConnectDB()
+	corsMiddleware := cors.New(cors.Options{
+        AllowedOrigins:   []string{"*"}, // You might want to specify the actual origins here.
+        AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+        AllowedHeaders:   []string{"Origin", "Content-Type", "Authorization"},
+        AllowCredentials: true,
+    })
+
+    r.Use(func(c *gin.Context) {
+        corsMiddleware.Handler(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+            c.Next()
+        })).ServeHTTP(c.Writer, c.Request)
+    })
+
 
 	// Middleware JWT
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{

@@ -11,6 +11,7 @@ require (
 require (
 	github.com/chenzhuoyu/iasm v0.9.1 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
+	github.com/rs/cors v1.10.1 // indirect
 )
 
 require (
